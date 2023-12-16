@@ -25,24 +25,30 @@ export async function POST(request: NextRequest) {
 
   const hashedToken = await bcrypt.hash(email, 10);
 
-  await client.admin.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      sessionToken: hashedToken as string,
-    },
-  });
+  try {
+    await client.admin.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        sessionToken: hashedToken as string,
+      },
+    });
 
-  cookies().set({
-    name: "sessionToken",
-    value: hashedToken as string,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 14,
-  });
+    cookies().set({
+      name: "sessionToken",
+      value: hashedToken as string,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 14,
+    });
 
-  return NextResponse.json({ success: true, user });
+    return NextResponse.json({ success: true, user });
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 401 });
+  } finally {
+    await client.$disconnect();
+  }
 }

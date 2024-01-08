@@ -20,7 +20,7 @@ const LoginForm = () => {
 
   const loginMutation = useMutation({
     mutationFn: async () =>
-      await fetch("/api/auth/login", {
+      await fetch("/api/auth/login2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

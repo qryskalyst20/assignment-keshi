@@ -14,13 +14,13 @@ export async function POST(request: NextRequest) {
   });
 
   if (!user) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    throw new Error("Invalid credentials");
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    throw new Error("Invalid credentials");
   }
 
   const hashedToken = await bcrypt.hash(email, 10);
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, user });
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 401 });
+    throw new Error(error as string);
   } finally {
     await client.$disconnect();
   }

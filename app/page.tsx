@@ -1,19 +1,18 @@
-"use client"
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { useSession } from '@/providers/SessionProvider'
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useSessionStore } from "@/hooks/session";
 
 export default function Home() {
-
-  const router = useRouter()
-  const { session } = useSession()
+  const router = useRouter();
+  const { session } = useSessionStore();
 
   useEffect(() => {
     if (session) {
-      router.push('/dashboard')
+      router.push("/dashboard");
     } else {
-      router.push('/auth/login')
+      router.push("/auth/login");
     }
-  }, [router, session])
+  }, [router, session]);
 }

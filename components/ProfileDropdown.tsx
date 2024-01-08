@@ -4,11 +4,10 @@ import { Menu, Transition } from "@headlessui/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
-import { useSession } from "@/providers/SessionProvider";
+import { useSessionStore } from "@/hooks/session";
 
 const ProfileDropdown = () => {
-
-  const { session } = useSession();
+  const { session } = useSessionStore();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -17,12 +16,12 @@ const ProfileDropdown = () => {
       body: JSON.stringify(session),
     });
 
-    const data = await res.json()
+    const data = await res.json();
 
     if (data.success) {
-      router.push("/auth/login")
+      router.push("/auth/login");
     } else {
-      toast.error("Logout Failed")
+      toast.error("Logout Failed");
     }
   };
 
